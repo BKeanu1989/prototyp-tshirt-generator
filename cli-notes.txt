@@ -1,0 +1,10 @@
+- working 
+gm convert -size 400x100 xc:yellow -fill black -pointsize 72 -font Arial -gravity Center -draw 'text 0,0 "some text"' image.png
+gm convert -font helvetica -fill blue -pointsize 72 -gravity Center -draw 'text 0,0 "Haiyti"' sample.jpg sample4.jpg
+
+— test
+convert -size 500x465 xc:transparent -pointsize 51 -font ./assets/impact.ttf -stroke "#000" -strokewidth 8 -draw "gravity center text 0,0 'WRITE SOMETHING'" -stroke "transparent" -fill "#fff" -draw "gravity center text 0,0 'WRITE SOMETHING'" -blur 1x0.5 -composite sample.jpg -resize 500x500 1.png
+
+gm convert -font helvetica -fill blue -draw "text 100,100 Cockatoo" bird.jpg bird.miff
+
+gm convert -font helvetica -fill blue -draw "text 100,100 Cockatoo" sample.jpg sample2.jpg
