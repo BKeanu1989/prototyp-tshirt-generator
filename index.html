@@ -3,7 +3,7 @@
 	<meta charset="UTF-8">
 	<title>Document</title>
 </head>
-<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"> 
+<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 <body>
 <div class="container">
 	<form class="" action="/" method="post">
@@ -11,43 +11,43 @@
     <img src="http://placehold.it/200x200&text=tshirt-basic" alt="" class="add_tshirt-basic" data-quality="Basic" data-type="T-Shirt">
     <img src="http://placehold.it/200x200&text=tshirt-premium" alt="" class="add_tshirt-premium" data-quality="Premium" data-type="T-Shirt">
 	</form>
-</div>	
+</div>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script>
 $(document).ready(function() {
 	function displayProductForm() {
 
-		// fetch prices for types & quality
-		var tshirtBasicPrice = 14.00;
-		var tshirtPremiumPrice = 16.00;
-
 		var type = $(this).attr('data-type');
 		var quality = $(this).attr('data-quality');
-
+		console.log("test", this);
 		var price;
 
 		var price = handlePrice(type, quality);
 
-		var wrapperBeginning = "<div class='wrapper'><span class='close_me' onclick='removeProductForm(event)'>close</span>";
+		var wrapperBeginning = "<div class='wrapper' data-p_price='"+price+"'><span class='close_me' onclick='removeProductForm(event)'>close</span>";
 		var chosenType = "<div class='form-group'><label for='type'>Ausgewählte Produktart:</label><input class='form-control' type='text' value="+type+" disabled></div>";
 		var chosenQuality = "<div class='form-group'><label for='type'>Ausgewählte Qualität:</label><input class='form-control' type='text' value="+quality+" disabled></div>";
 
 		var motivInput = "<div class='form-group'><label for='motiv'>Motiv:</label><input class='form-control' type='text' name='motiv' id='motiv' placeholder='test.tiff'></div>";
 		var priceInput = "<div class='form-group'><label for='price'>Price €:</label><input class='form-control' type='number' name='price' id='price' min='14.00' value='"+price+"'></div>";
 		var colorText = "<span style='font-size: 16px; display: block;'>Farben</span>";
-		var colorCheckboxButtonsWhite = "<div class='checkbox'><label><input type='checkbox' value='weiss'>Weiß</label></div>";
+		var colorCheckboxWrapperBeginning = "<div data-type='"+type+"' data-quality='"+quality+"'>";
+		var colorCheckboxButtonsWhite = "<div class='checkbox'><label><input type='checkbox' value='weiß'>Weiß</label></div>";
 		var colorCheckboxButtonsBlack = "<div class='checkbox'><label><input type='checkbox' value='schwarz'>Schwarz</label></div>";
 		var colorCheckboxButtonsGrey = "<div class='checkbox'><label><input type='checkbox' value='grau'>Grau</label></div>";
-		var submitShowVariationFields = "<a class='btn btn-primary show_variations' href='#' role='button'>Zeige Varianten</a>'";
+		var colorCheckboxWrapperEnd = "</div>";
+		var submitShowVariationFields = "<a class='btn btn-primary show_variations' href='#' role='button' data-p_price='"+price+"' onclick='displayVariationInputfields(event)' data-type='"+type+"' data-quality='"+quality+"'>Zeige Varianten</a>";
 		var wrapperEnd = "</div>";
-		var appendInputs = wrapperBeginning + chosenType + chosenQuality + motivInput + priceInput + colorCheckboxButtonsWhite + colorCheckboxButtonsBlack + colorCheckboxButtonsGrey + submitShowVariationFields + wrapperEnd;
+		var appendInputs = wrapperBeginning + chosenType + chosenQuality + motivInput + priceInput + colorText + colorCheckboxWrapperBeginning + colorCheckboxButtonsWhite + colorCheckboxButtonsBlack + colorCheckboxButtonsGrey + colorCheckboxWrapperEnd + submitShowVariationFields + wrapperEnd;
 
 		$(appendInputs).appendTo('form');
 
 	}
 
 	function handlePrice(type, quality) {
+		// fetch prices for types & quality
+
 		switch(true) {
 			case (type === 'T-Shirt') && (quality === 'Basic'):
 			price = "14.00"
@@ -58,9 +58,6 @@ $(document).ready(function() {
 		return price;
 	}
 
-var checkedColors = $('input[type="checkbox"]:checked');
-
-
 	$('img').click(displayProductForm);
 
 	// TODO debug closing function ... only works if injected into console ... maybe because its created after dom rendering
@@ -68,24 +65,73 @@ var checkedColors = $('input[type="checkbox"]:checked');
 	// 	console.log("close me was clicked");
 	// 	$(this).parent().detach();
 	// });
-});
+
+}); // end of jquery ready function
+
 	// if image (product is clicked) get quality & type
 	// append fields with _motiv, _price - input type number min: mindestpreis, prepopulate _sizing_guide_img, input type radio - what colors
 	// click button for creation of variations with given values/colors
 	// display respective images
 		// attribute_pa_farbe: weiss, schwarz, grau
 		// attribute_pa_groesse: s, m, l, xl, xxl
-		// prepopulate attribute_pa fields & _price (with product price), _sku,  			 		
+		// prepopulate attribute_pa fields & _price (with product price), _sku,
 
 	function removeProductForm(e) {
 		var target = e.target;
+		console.log(target);
+		console.log(e);
 		var parent = target.parentElement;
 		parent.remove();
 	}
 
+	function handleShowVariants(e) {
+		// get checked Colors in its container
+		var type = e.target.getAttribute('data-type');
+		var quality = e.target.getAttribute('data-quality');
+		var checkedColors = $("div[data-quality='"+quality+"'][data-type='"+type+"'] input[type='checkbox']:checked");
+		// for (var i = 0; i < checkedColors.length; i++)	{
+		// 	return checkedColors[i];
+		// }
+		var checkedValues = [].map.call(checkedColors, function(checkedValue) {
+			return checkedValue.value;
+		});
+		return checkedValues;
+	}
+
+	function displayVariationInputfields(e) {
+		var checkedColorValues = handleShowVariants(e);
+		var target = e.target;
+		var price = target.getAttribute('data-p_price');
+		var type = target.getAttribute('data-type');
+		var quality = target.getAttribute('data-quality');
+
+		// replace a.show_variations -> submitbutton in clicked div.wrapper
+		// append:
+							// -- input field
+		console.log(checkedColorValues);
+		checkedColorValues.forEach(function(color) {
+			// if ($('table.'+color).length == 0) {
+			if ($('table.'+color+'.'+quality+'.'+type).length == 0) {
+				var tableBeggining = "<div class='table-responsive'><table class='table "+color+" "+quality+" "+type+"'><span class='close_me' onclick='removeProductForm(event)'>close</span>";
+				var tableColSpanColor = "<tr><th colspan='5'>"+color+"</th></tr>";
+				var tableHeaderPrice = "<tr><th></th><th>Price</th></tr>";
+				var tableSRow = "<tr><td>S</td><td><input type='number' name='price_S' data-color='"+color+"' value='"+price+"'></td>";
+				var tableMRow = "<tr><td>M</td><td><input type='number' name='price_M' data-color='"+color+"' value='"+price+"'></td>";
+				var tableLRow = "<tr><td>L</td><td><input type='number' name='price_L' data-color='"+color+"' value='"+price+"'></td>";
+				var tableXLRow = "<tr><td>XL</td><td><input type='number' name='price_XL' data-color='"+color+"' value='"+price+"'></td>";
+				var tableXXLRow = "<tr><td>XXL</td><td><input type='number' name='price_XXL' data-color='"+color+"' value='"+price+"'></td>";
+				var tableEnding = "</table></div>";
+
+				var tableForm = tableBeggining + tableColSpanColor + tableHeaderPrice + tableSRow + tableMRow + tableLRow + tableXLRow + tableXXLRow + tableEnding;
+
+				$(tableForm).appendTo(".wrapper[data-p_price='"+price+"']");
+			}
+
+		});
+
+	}
+
 </script>
-
-
 
 </body>
 </html>
