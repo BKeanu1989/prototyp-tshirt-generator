@@ -20,16 +20,18 @@ $(document).ready(function() {
 
 		var type = $(this).attr('data-type');
 		var quality = $(this).attr('data-quality');
-		var price;
+		var priceBasic = "14.00";
+		var pricePremium = "17.00";
 
-		var price = handlePrice(type, quality);
+		// var price = handlePrice(type, quality);
 
-		var wrapperBeginning = "<div class='wrapper' data-p_price='"+price+"'><span class='close_me' onclick='removeProductForm(event)'>close</span>";
+		var wrapperBeginning = "<div class='wrapper' data-p_price='"+priceBasic+"'><span class='close_me' onclick='removeProductForm(event)'>close</span>";
 		var chosenType = "<div class='form-group'><label for='type'>Ausgewählte Produktart:</label><input class='form-control' type='text' value="+type+" disabled></div>";
 		var chosenQuality = "<div class='form-group'><label for='type'>Ausgewählte Qualität:</label><input class='form-control' type='text' value="+quality+" disabled></div>";
 
 		var motivInput = "<div class='form-group'><label for='motiv'>Motiv:</label><input class='form-control' type='text' name='motiv' id='motiv' placeholder='test.tiff'></div>";
-		var priceInput = "<div class='form-group'><label for='price'>Price €:</label><input class='form-control' type='number' name='price' id='price' min='14.00' value='"+price+"'></div>";
+		var priceBasicInput = "<div class='form-group'><label for='price'>Price €:</label><input class='form-control' type='number' name='price_basic' id='price' min='14.00' value='"+priceBasic+"'></div>";
+		var pricePremiumInput = "<div class='form-group'><label for='price'>Price €:</label><input class='form-control' type='number' name='price_premium' id='price' min='17.00' value='"+pricePremium+"'></div>";
 		var descriptionText = "<div class='form-group'><label for='description'>Beschreibung:</label><textarea class='form-control' name='description' rows='4'></textarea>";
 		var colorText = "<span style='font-size: 16px; display: block;'>Farben</span>";
 		var colorCheckboxWrapperBeginning = "<div data-type='"+type+"' data-quality='"+quality+"'>";
@@ -37,9 +39,9 @@ $(document).ready(function() {
 		var colorCheckboxButtonsBlack = "<div class='checkbox'><label><input type='checkbox' value='schwarz'>Schwarz</label></div>";
 		var colorCheckboxButtonsGrey = "<div class='checkbox'><label><input type='checkbox' value='grau'>Grau</label></div>";
 		var colorCheckboxWrapperEnd = "</div>";
-		var submitShowVariationFields = "<a class='btn btn-primary show_variations' href='#' role='button' data-p_price='"+price+"' onclick='displayVariationInputfields(event)' data-type='"+type+"' data-quality='"+quality+"'>Zeige Varianten</a>";
+		var submitShowVariationFields = "<a class='btn btn-primary show_variations' href='#' role='button' data-p_priceBasic='"+priceBasic+"' data-p_pricePremium='"+pricePremium+"' onclick='displayVariationInputfields(event)' data-type='"+type+"' data-quality='"+quality+"'>Zeige Varianten</a>";
 		var wrapperEnd = "</div>";
-		var appendInputs = wrapperBeginning + chosenType + chosenQuality + motivInput + priceInput + descriptionText + colorText + colorCheckboxWrapperBeginning + colorCheckboxButtonsWhite + colorCheckboxButtonsBlack + colorCheckboxButtonsGrey + colorCheckboxWrapperEnd + submitShowVariationFields + wrapperEnd;
+		var appendInputs = wrapperBeginning + chosenType + chosenQuality + motivInput + priceBasicInput + pricePremiumInput + descriptionText + colorText + colorCheckboxWrapperBeginning + colorCheckboxButtonsWhite + colorCheckboxButtonsBlack + colorCheckboxButtonsGrey + colorCheckboxWrapperEnd + submitShowVariationFields + wrapperEnd;
 
 		$(appendInputs).appendTo('form');
 
@@ -99,24 +101,27 @@ $(document).ready(function() {
 	function displayVariationInputfields(e) {
 		var checkedColorValues = handleShowVariants(e);
 		var target = e.target;
-		var price = target.getAttribute('data-p_price');
+		var price = target.getAttribute('data-p_priceBasic');
+		var price2 = target.getAttribute('data-p_pricePremium');
 		var type = target.getAttribute('data-type');
 		var quality = target.getAttribute('data-quality');
+
+		// price handling prototype
 
 		// replace a.show_variations -> submitbutton in clicked div.wrapper
 		// append:
 							// -- input field
 		checkedColorValues.forEach(function(color) {
 			// if ($('table.'+color).length == 0) {
-			if ($('table.'+color+'.'+quality+'.'+type).length == 0) {
-				var tableBeggining = "<div class='table-responsive'><table class='table "+color+" "+quality+" "+type+"'><span class='close_me' onclick='removeProductForm(event)'>close</span>";
+			if ($('table.'+color+'.'+type).length == 0) {
+				var tableBeggining = "<div class='table-responsive'><table class='table "+color+" "+type+"'><span class='close_me' onclick='removeProductForm(event)'>close</span>";
 				var tableColSpanColor = "<tr><th colspan='5'>"+color+"</th></tr>";
-				var tableHeaderPrice = "<tr><th></th><th>Price</th></tr>";
-				var tableSRow = "<tr><td>S</td><td><input type='number' name='price_S' data-color='"+color+"' value='"+price+"'></td>";
-				var tableMRow = "<tr><td>M</td><td><input type='number' name='price_M' data-color='"+color+"' value='"+price+"'></td>";
-				var tableLRow = "<tr><td>L</td><td><input type='number' name='price_L' data-color='"+color+"' value='"+price+"'></td>";
-				var tableXLRow = "<tr><td>XL</td><td><input type='number' name='price_XL' data-color='"+color+"' value='"+price+"'></td>";
-				var tableXXLRow = "<tr><td>XXL</td><td><input type='number' name='price_XXL' data-color='"+color+"' value='"+price+"'></td>";
+				var tableHeaderPrice = "<tr><th></th><th>Price</th><th></th><th>Price</th></tr>";
+				var tableSRow = "<tr><td>S - Basic</td><td><input type='number' name='price_S' data-color='"+color+"' value='"+price+"'></td><td>S - Premium</td><td><input type='number' name='price_S' value='"+price2+"'></td>";
+				var tableMRow = "<tr><td>M - Basic</td><td><input type='number' name='price_M' data-color='"+color+"' value='"+price+"'></td><td>M - Premium</td><td><input type='number' name='price_S' value='"+price2+"'></td>";
+				var tableLRow = "<tr><td>L - Basic</td><td><input type='number' name='price_L' data-color='"+color+"' value='"+price+"'></td><td>L - Premium</td><td><input type='number' name='price_S' value='"+price2+"'></td>";
+				var tableXLRow = "<tr><td>XL - Basic</td><td><input type='number' name='price_XL' data-color='"+color+"' value='"+price+"'></td><td>XL - Premium</td><td><input type='number' name='price_S' value='"+price2+"'></td>";
+				var tableXXLRow = "<tr><td>XXL - Basic</td><td><input type='number' name='price_XXL' data-color='"+color+"' value='"+price+"'></td><td>XXL - Premium</td><td><input type='number' name='price_S' value='"+price2+"'></td>";
 				var tableEnding = "</table></div>";
 
 				var tableForm = tableBeggining + tableColSpanColor + tableHeaderPrice + tableSRow + tableMRow + tableLRow + tableXLRow + tableXXLRow + tableEnding;
