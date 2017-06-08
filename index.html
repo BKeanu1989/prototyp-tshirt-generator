@@ -20,7 +20,6 @@ $(document).ready(function() {
 
 		var type = $(this).attr('data-type');
 		var quality = $(this).attr('data-quality');
-		console.log("test", this);
 		var price;
 
 		var price = handlePrice(type, quality);
@@ -31,6 +30,7 @@ $(document).ready(function() {
 
 		var motivInput = "<div class='form-group'><label for='motiv'>Motiv:</label><input class='form-control' type='text' name='motiv' id='motiv' placeholder='test.tiff'></div>";
 		var priceInput = "<div class='form-group'><label for='price'>Price €:</label><input class='form-control' type='number' name='price' id='price' min='14.00' value='"+price+"'></div>";
+		var descriptionText = "<div class='form-group'><label for='description'>Beschreibung:</label><textarea class='form-control' name='description' rows='4'></textarea>";
 		var colorText = "<span style='font-size: 16px; display: block;'>Farben</span>";
 		var colorCheckboxWrapperBeginning = "<div data-type='"+type+"' data-quality='"+quality+"'>";
 		var colorCheckboxButtonsWhite = "<div class='checkbox'><label><input type='checkbox' value='weiß'>Weiß</label></div>";
@@ -39,7 +39,7 @@ $(document).ready(function() {
 		var colorCheckboxWrapperEnd = "</div>";
 		var submitShowVariationFields = "<a class='btn btn-primary show_variations' href='#' role='button' data-p_price='"+price+"' onclick='displayVariationInputfields(event)' data-type='"+type+"' data-quality='"+quality+"'>Zeige Varianten</a>";
 		var wrapperEnd = "</div>";
-		var appendInputs = wrapperBeginning + chosenType + chosenQuality + motivInput + priceInput + colorText + colorCheckboxWrapperBeginning + colorCheckboxButtonsWhite + colorCheckboxButtonsBlack + colorCheckboxButtonsGrey + colorCheckboxWrapperEnd + submitShowVariationFields + wrapperEnd;
+		var appendInputs = wrapperBeginning + chosenType + chosenQuality + motivInput + priceInput + descriptionText + colorText + colorCheckboxWrapperBeginning + colorCheckboxButtonsWhite + colorCheckboxButtonsBlack + colorCheckboxButtonsGrey + colorCheckboxWrapperEnd + submitShowVariationFields + wrapperEnd;
 
 		$(appendInputs).appendTo('form');
 
@@ -78,8 +78,6 @@ $(document).ready(function() {
 
 	function removeProductForm(e) {
 		var target = e.target;
-		console.log(target);
-		console.log(e);
 		var parent = target.parentElement;
 		parent.remove();
 	}
@@ -108,7 +106,6 @@ $(document).ready(function() {
 		// replace a.show_variations -> submitbutton in clicked div.wrapper
 		// append:
 							// -- input field
-		console.log(checkedColorValues);
 		checkedColorValues.forEach(function(color) {
 			// if ($('table.'+color).length == 0) {
 			if ($('table.'+color+'.'+quality+'.'+type).length == 0) {
@@ -130,6 +127,45 @@ $(document).ready(function() {
 		});
 
 	}
+function test() {
+	var array1 = new Array();
+	var obj1 = {name: "My field", sku : "12345"};
+	var jsonTest = array1.push({name: "test"});
+	console.log(jsonTest);
+	var jsonString = JSON.stringify(jsonTest);
+	console.log(jsonString);
+}
+
+function Product(name, description, [size, color, price]) {
+	this.name = name;
+	this.description = description;
+	this.size = size;
+	this.color = color;
+	this.price = price;
+}
+
+function Product2(name, description, variations) {
+	this.name = name;
+	this.description = description;
+	this.variations = [variations];
+}
+
+function getData() {
+	var wrappers = $('.wrapper');
+	for (var i = 0; wrappers.length > i; i++) {
+		console.log(wrappers[i].querySelector('input[name="price_S"]'));
+	}
+}
+
+// var product2 = new Product2("foo", "foo bar", [{"attributes": {"groesse":"small", "farbe":"weiß"}}])
+
+// var x = $('.wrapper');
+// console.log(test[1].querySelector('input#price'));
+// for (var i = 0; x.length > i; i++) { console.log($(x[i] + " input")); }
+// console.log($(test)[0]);
+// console.log($($(test)[0]));
+
+// {0: product: [type, quality], product_variations: [size, color, price], etc}
 
 </script>
 
