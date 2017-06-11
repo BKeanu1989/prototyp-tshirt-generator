@@ -1,0 +1,100 @@
+[
+    {
+        "name"        : "Test - T-Shirt",
+        "sku"         : "12345848",
+        "description" : "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse ac erat maximus augue accumsan egestas. Quisque posuere augue quis libero molestie posuere.",
+        "categories"  : [
+            "Hip-Hop", "SALE"
+        ],
+        "available_attributes": [
+            "groesse", "farbe"
+        ],
+        "variations":
+        [
+            {
+                "attributes": {
+                    "groesse"  : "Small",
+                    "farbe" : "weiss"
+                },
+                "price" : "8.00"
+            },
+            {
+                "attributes": {
+                    "groesse"  : "Medium",
+                    "farbe" : "weiss"
+                },
+                "price" : "10.00"
+            },
+            {
+                "attributes": {
+                    "groesse"  : "Small",
+                    "farbe" : "Blue"
+                },
+                "price" : "8.00"
+            },
+            {
+                "attributes": {
+                    "groesse"  : "Large",
+                    "farbe" : "Blue"
+                },
+                "price" : "12.00"
+            }, {
+              "attributes": {
+                "groesse": "test_groesse",
+                "farbe" : "test_farbe"
+              },
+              "price": "29.95",
+              "sku": "12234345"
+            }
+        ]
+    },
+    {
+        "name"        : "Test - T-Shirtv2",
+        "sku"         : "12345848",
+        "description" : "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse ac erat maximus augue accumsan egestas. Quisque posuere augue quis libero molestie posuere.",
+        "categories"  : [
+            "MEN", "SALE"
+        ],
+        "available_attributes": [
+            "groesse", "farbe"
+        ],
+        "variations":
+        [
+            {
+                "attributes": {
+                    "groesse"  : "Small",
+                    "farbe" : "weiss"
+                },
+                "price" : "8.00"
+            },
+            {
+                "attributes": {
+                    "groesse"  : "Medium",
+                    "farbe" : "weiss"
+                },
+                "price" : "10.00"
+            },
+            {
+                "attributes": {
+                    "groesse"  : "Small",
+                    "farbe" : "Blue"
+                },
+                "price" : "8.00"
+            },
+            {
+                "attributes": {
+                    "groesse"  : "Large",
+                    "farbe" : "Blue"
+                },
+                "price" : "12.00"
+            }, {
+              "attributes": {
+                "groesse": "test_groesse",
+                "farbe" : "test_farbe"
+              },
+              "price": "29.95",
+              "sku": "9912234345"
+            }
+        ]
+    }
+]

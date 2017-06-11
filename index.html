@@ -155,10 +155,11 @@ function Product(name, description, [size, color, price]) {
 	this.price = price;
 }
 
-function Product2(name, description, variations) {
+function Product2(name, description, variations, price) {
 	this.name = name;
 	this.description = description;
 	this.variations = [variations];
+	this.price = price;
 }
 
 function getData() {
@@ -168,7 +169,17 @@ function getData() {
 	}
 }
 
-// var product2 = new Product2("foo", "foo bar", [{"attributes": {"groesse":"small", "farbe":"weiß"}}])
+// var product2 = new Product2("foo", "foo bar", [{"attributes": {"groesse":"small", "farbe":"weiß"}, "price": "18.00"}])
+function getWrappers() {
+	var wrappers = $('.wrapper');
+	for (var i = 0; i < wrappers.length; i++) {
+		console.log(wrappers[i]);
+		console.log($(wrappers[i]).querySelectorAll('input[name^="price"]'));
+		// name, description,
+		// getDataSingleWrapper();
+	}
+
+}
 
 // var x = $('.wrapper');
 // console.log(test[1].querySelector('input#price'));
