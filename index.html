@@ -95,6 +95,7 @@ $(document).ready(function() {
 		var type = e.target.getAttribute('data-type');
 		var quality = e.target.getAttribute('data-quality');
 		var checkedColors = $("div[data-quality='"+quality+"'][data-type='"+type+"'] input[type='checkbox']:checked");
+		console.log(checkedColors);
 		// for (var i = 0; i < checkedColors.length; i++)	{
 		// 	return checkedColors[i];
 		// }
@@ -107,6 +108,8 @@ $(document).ready(function() {
 	function displayVariationInputfields(e) {
 		var checkedColorValues = handleShowVariants(e);
 		var target = e.target;
+		var parentWrapper = $(e.target).closest('.wrapper');
+		console.log("parent wrapper: ",parentWrapper);
 		var price = target.getAttribute('data-p_priceBasic');
 		var price2 = target.getAttribute('data-p_pricePremium');
 		var type = target.getAttribute('data-type');
@@ -120,19 +123,19 @@ $(document).ready(function() {
 		checkedColorValues.forEach(function(color) {
 			// if ($('table.'+color).length == 0) {
 			if ($('table.'+color+'.'+type).length == 0) {
-				var tableBeggining = "<div class='table-responsive'><table class='table "+color+" "+type+"'><span class='close_me' onclick='removeProductForm(event)'>close</span>";
+				var tableBeggining = "<div class='table-responsive'><table class='table "+color+" "+type+"' data-color='"+color+"' data-type='"+type+"'><span class='close_me' onclick='removeProductForm(event)'>close</span>";
 				var tableColSpanColor = "<tr><th colspan='5'>"+color+"</th></tr>";
 				var tableHeaderPrice = "<tr><th></th><th>Price</th><th></th><th>Price</th></tr>";
-				var tableSRow = "<tr><td>S - Basic</td><td><input type='number' name='price_S' data-color='"+color+"' value='"+price+"'></td><td>S - Premium</td><td><input type='number' name='price_S' value='"+price2+"'></td>";
-				var tableMRow = "<tr><td>M - Basic</td><td><input type='number' name='price_M' data-color='"+color+"' value='"+price+"'></td><td>M - Premium</td><td><input type='number' name='price_S' value='"+price2+"'></td>";
-				var tableLRow = "<tr><td>L - Basic</td><td><input type='number' name='price_L' data-color='"+color+"' value='"+price+"'></td><td>L - Premium</td><td><input type='number' name='price_S' value='"+price2+"'></td>";
-				var tableXLRow = "<tr><td>XL - Basic</td><td><input type='number' name='price_XL' data-color='"+color+"' value='"+price+"'></td><td>XL - Premium</td><td><input type='number' name='price_S' value='"+price2+"'></td>";
-				var tableXXLRow = "<tr><td>XXL - Basic</td><td><input type='number' name='price_XXL' data-color='"+color+"' value='"+price+"'></td><td>XXL - Premium</td><td><input type='number' name='price_S' value='"+price2+"'></td>";
+				var tableSRow = "<tr><td>S - Basic</td><td><input type='number' name='price_S' data-size='S' data-color='"+color+"' data-quality='Basic' value='"+price+"'></td><td>S - Premium</td><td><input type='number' name='price_S' data-color='"+color+"' data-size='S' data-quality='Premium' value='"+price2+"'></td>";
+				var tableMRow = "<tr><td>M - Basic</td><td><input type='number' name='price_M' data-size='M' data-color='"+color+"' data-quality='Basic' value='"+price+"'></td><td>M - Premium</td><td><input type='number' name='price_M' data-color='"+color+"' data-size='M' data-quality='Premium' value='"+price2+"'></td>";
+				var tableLRow = "<tr><td>L - Basic</td><td><input type='number' name='price_L' data-size='L' data-color='"+color+"' data-quality='Basic' value='"+price+"'></td><td>L - Premium</td><td><input type='number' name='price_L' data-color='"+color+"' data-size='L' data-quality='Premium' value='"+price2+"'></td>";
+				var tableXLRow = "<tr><td>XL - Basic</td><td><input type='number' name='price_XL' data-size='XL' data-color='"+color+"' data-quality='Basic' value='"+price+"'></td><td>XL - Premium</td><td><input type='number' name='price_XL' data-color='"+color+"' data-size='XL' data-quality='Premium' value='"+price2+"'></td>";
+				var tableXXLRow = "<tr><td>XXL - Basic</td><td><input type='number' name='price_XXL' data-size='XXL' data-color='"+color+"' data-quality='Basic' value='"+price+"'></td><td>XXL - Premium</td><td><input type='number' name='price_XXL' data-color='"+color+"' data-size='XXL' data-quality='Premium' value='"+price2+"'></td>";
 				var tableEnding = "</table></div>";
 
 				var tableForm = tableBeggining + tableColSpanColor + tableHeaderPrice + tableSRow + tableMRow + tableLRow + tableXLRow + tableXXLRow + tableEnding;
 
-				$(tableForm).appendTo(".wrapper[data-p_price='"+price+"']");
+				$(tableForm).appendTo(parentWrapper);
 			}
 
 		});
@@ -155,11 +158,10 @@ function Product(name, description, [size, color, price]) {
 	this.price = price;
 }
 
-function Product2(name, description, variations, price) {
+function Product2(name, description, variations) {
 	this.name = name;
 	this.description = description;
-	this.variations = [variations];
-	this.price = price;
+	this.variations = variations;
 }
 
 function getData() {
@@ -169,16 +171,51 @@ function getData() {
 	}
 }
 
+function getColorsInWrapper(wrapper) {
+	var colorTables = wrapper.querySelectorAll('table[data-color]');
+	var colors = [].map.call(colorTables, function(colorTable) {
+		return colorTable.getAttribute('data-color');
+	});
+	return colors;
+}
+
 // var product2 = new Product2("foo", "foo bar", [{"attributes": {"groesse":"small", "farbe":"weiß"}, "price": "18.00"}])
 function getWrappers() {
 	var wrappers = $('.wrapper');
+	var attributesObjectsSummary = {};
 	for (var i = 0; i < wrappers.length; i++) {
-		console.log(wrappers[i]);
-		console.log($(wrappers[i]).querySelectorAll('input[name^="price"]'));
+		var singleWrapperAttributesObject = [];
+		var description = wrappers[i].querySelector('textarea[name="description"]').value;
+		var type = wrappers[i].querySelector('table[data-type]').getAttribute('data-type');
+		console.log("type: ",type);
+		var colors = getColorsInWrapper(wrappers[i]);
+		console.log("colors: ", colors);
+
+		for (var x = 0; x < colors.length; x++) {
+			var color = colors[x];
+			var basicInputs = wrappers[i].querySelectorAll('input[name^="price"][data-quality="Basic"][data-color="'+color+'"]');
+			for (var y = 0; y < basicInputs.length; y++) {
+				var size = basicInputs[y].getAttribute('data-size');
+				var price = basicInputs[y].getAttribute('value');
+				var singleAttributeObject = {"attributes": {"groesse": size, "farbe": color}, "price": price, "quality": "Basic"};
+				singleWrapperAttributesObject.push(singleAttributeObject);
+			}
+
+			var premiumInputs = wrappers[i].querySelectorAll('input[name^="price"][data-quality="Premium"][data-color="'+color+'"]');
+			for (var y = 0; y < premiumInputs.length; y++) {
+				var size = premiumInputs[y].getAttribute('data-size');
+				var price = premiumInputs[y].getAttribute('value');
+				var singleAttributeObject = {"attributes": {"groesse": size, "farbe": color}, "price": price, "quality": "Premium"};
+				singleWrapperAttributesObject.push(singleAttributeObject);
+			}
+			var stringified = JSON.stringify(singleWrapperAttributesObject);
+
+		}
+		var test = new Product2("foo", description, singleWrapperAttributesObject);
+		console.log(test);
 		// name, description,
 		// getDataSingleWrapper();
 	}
-
 }
 
 // var x = $('.wrapper');
@@ -190,6 +227,6 @@ function getWrappers() {
 // {0: product: [type, quality], product_variations: [size, color, price], etc}
 
 </script>
-
+<button onclick="getWrappers()">getWrappers</button>
 </body>
 </html>
