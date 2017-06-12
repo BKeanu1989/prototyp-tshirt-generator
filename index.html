@@ -109,7 +109,6 @@ $(document).ready(function() {
 		var checkedColorValues = handleShowVariants(e);
 		var target = e.target;
 		var parentWrapper = $(e.target).closest('.wrapper');
-		console.log("parent wrapper: ",parentWrapper);
 		var price = target.getAttribute('data-p_priceBasic');
 		var price2 = target.getAttribute('data-p_pricePremium');
 		var type = target.getAttribute('data-type');
@@ -125,7 +124,7 @@ $(document).ready(function() {
 			if ($('table.'+color+'.'+type).length == 0) {
 				var tableBeggining = "<div class='table-responsive'><table class='table "+color+" "+type+"' data-color='"+color+"' data-type='"+type+"'><span class='close_me' onclick='removeProductForm(event)'>close</span>";
 				var tableColSpanColor = "<tr><th colspan='5'>"+color+"</th></tr>";
-				var tableHeaderPrice = "<tr><th></th><th>Price</th><th></th><th>Price</th></tr>";
+				var tableHeaderPrice = "<tr><th></th><th>Price <a href='#' data-quality='Basic' onclick='testMe(event)'>x</a></th><th></th><th>Price <a href='#' data-quality='Premium' onclick='testMe(event)'>x</a></th></tr>";
 				var tableSRow = "<tr><td>S - Basic</td><td><input type='number' name='price_S' data-size='S' data-color='"+color+"' data-quality='Basic' value='"+price+"'></td><td>S - Premium</td><td><input type='number' name='price_S' data-color='"+color+"' data-size='S' data-quality='Premium' value='"+price2+"'></td>";
 				var tableMRow = "<tr><td>M - Basic</td><td><input type='number' name='price_M' data-size='M' data-color='"+color+"' data-quality='Basic' value='"+price+"'></td><td>M - Premium</td><td><input type='number' name='price_M' data-color='"+color+"' data-size='M' data-quality='Premium' value='"+price2+"'></td>";
 				var tableLRow = "<tr><td>L - Basic</td><td><input type='number' name='price_L' data-size='L' data-color='"+color+"' data-quality='Basic' value='"+price+"'></td><td>L - Premium</td><td><input type='number' name='price_L' data-color='"+color+"' data-size='L' data-quality='Premium' value='"+price2+"'></td>";
@@ -141,6 +140,18 @@ $(document).ready(function() {
 		});
 
 	}
+
+function testMe(e)	{
+	var quality = e.target.getAttribute('data-quality');
+	var tableWithData = $(e.target).closest('table')[0];
+	var type = tableWithData.getAttribute('data-type');
+	var color = tableWithData.getAttribute('data-color');
+
+
+	var test = $('table[data-type="'+type+'"] input[type="number"][data-color="'+color+'"][data-quality="'+quality+'"]');
+	test.remove();
+}
+
 function test() {
 	var array1 = new Array();
 	var obj1 = {name: "My field", sku : "12345"};
