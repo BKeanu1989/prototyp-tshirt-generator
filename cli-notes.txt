@@ -8,3 +8,8 @@ convert -size 500x465 xc:transparent -pointsize 51 -font ./assets/impact.ttf -st
 gm convert -font helvetica -fill blue -draw "text 100,100 Cockatoo" bird.jpg bird.miff
 
 gm convert -font helvetica -fill blue -draw "text 100,100 Cockatoo" sample.jpg sample2.jpg
+-- convert png to tiff
+gm convert test.png test.tiff
+gm convert sample.jpg sample4.tiff
+gm identify sample.jpg
+
