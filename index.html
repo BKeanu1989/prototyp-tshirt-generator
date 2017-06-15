@@ -13,8 +13,21 @@
 		<img src="http://placehold.it/200x200&text=tshirt-basic" alt="tshirt" class="add_tshirt-basic"  data-type="T-Shirt">
 		<img src="http://placehold.it/200x200&text=tshirt-premium" alt="hoodie" class="add_tshirt-premium"  data-type="Hoodie">
 	 -->
-    <img src="http://placehold.it/200x200&text=tshirt-basic" alt="tshirt" class="add_tshirt-basic" data-quality="Basic" data-type="T-Shirt">
-    <img src="http://placehold.it/200x200&text=tshirt-premium" alt="hoodie" class="add_tshirt-premium" data-quality="Premium" data-type="Hoodie">
+    <img src="http://placehold.it/200x200&text=tshirt" alt="tshirt" class="add_tshirt-basic" data-quality="Basic" data-type="T-Shirt">
+    <img src="http://placehold.it/200x200&text=hoodie" alt="hoodie" class="add_tshirt-premium" data-quality="Premium" data-type="Hoodie">
+		<div class="form-group">
+			<label for="artist_name">Künstlername:</label>
+			<input type="text" class="form-control" id="artist_name" name="artist_name">
+		</div>
+		<div class="form-group">
+			<label for="genre">Genre:</label>
+			<select type="text" id="genre" name="genre" class="form-control">
+				<option value="Hip-Hop">Hip-Hop</option>
+				<option value="Rock">Rock</option>
+				<option value="Electro">Electro</option>
+				<option value="Techno">Techno</option>
+			</select>
+		</div>
 	</form>
 </div>
 
@@ -33,7 +46,8 @@ $(document).ready(function() {
 
 		var wrapperBeginning = "<div class='wrapper' data-p_price='"+priceBasic+"'><span class='close_me' onclick='removeProductForm(event)'>close</span>";
 		var chosenType = "<div class='form-group'><label for='type'>Ausgewählte Produktart:</label><input class='form-control' type='text' value="+type+" disabled></div>";
-		var chosenQuality = "<div class='form-group'><label for='type'>Ausgewählte Qualität:</label><input class='form-control' type='text' value="+quality+" disabled></div>";
+		// var chosenQuality = "<div class='form-group'><label for='type'>Ausgewählte Qualität:</label><input class='form-control' type='text' value="+quality+" disabled></div>";
+		var nameInput = "<div class='form-group'><label for='productName'>Produkt Name:</label><input class='form-control' type='text' name='productName' id='productName' placeholder='xyz'></div>";
 
 		var motivInput = "<div class='form-group'><label for='motiv'>Motiv:</label><input class='form-control' type='text' name='motiv' id='motiv' placeholder='test.tiff'></div>";
 		var priceBasicInput = "<div class='form-group'><label for='price'>Price €:</label><input class='form-control' type='number' name='price_basic' id='price' min='14.00' value='"+priceBasic+"'></div>";
@@ -47,7 +61,7 @@ $(document).ready(function() {
 		var colorCheckboxWrapperEnd = "</div>";
 		var submitShowVariationFields = "<a class='btn btn-primary show_variations' href='#' role='button' data-p_priceBasic='"+priceBasic+"' data-p_pricePremium='"+pricePremium+"' onclick='displayVariationInputfields(event)' data-type='"+type+"' data-quality='"+quality+"'>Zeige Varianten</a>";
 		var wrapperEnd = "</div>";
-		var appendInputs = wrapperBeginning + chosenType + chosenQuality + motivInput + priceBasicInput + pricePremiumInput + descriptionText + colorText + colorCheckboxWrapperBeginning + colorCheckboxButtonsWhite + colorCheckboxButtonsBlack + colorCheckboxButtonsGrey + colorCheckboxWrapperEnd + submitShowVariationFields + wrapperEnd;
+		var appendInputs = wrapperBeginning + chosenType + nameInput + motivInput + priceBasicInput + pricePremiumInput + descriptionText + colorText + colorCheckboxWrapperBeginning + colorCheckboxButtonsWhite + colorCheckboxButtonsBlack + colorCheckboxButtonsGrey + colorCheckboxWrapperEnd + submitShowVariationFields + wrapperEnd;
 
 		$(appendInputs).appendTo('form');
 
@@ -169,10 +183,11 @@ function Product(name, description, [size, color, price]) {
 	this.price = price;
 }
 
-function Product2(name, description, variations) {
+function Product2(name, description, category, variations) {
 	this.name = name;
 	this.description = description;
 	this.variations = variations;
+	this.category = category;
 }
 
 function getData() {
@@ -192,10 +207,13 @@ function getColorsInWrapper(wrapper) {
 
 // var product2 = new Product2("foo", "foo bar", [{"attributes": {"groesse":"small", "farbe":"weiß"}, "price": "18.00"}])
 function getWrappers() {
+	var artist_name = $('#artist_name')[0].value;
+	var category = $('#genre')[0].value;
 	var wrappers = $('.wrapper');
 	var attributesObjectsSummary = {};
 	for (var i = 0; i < wrappers.length; i++) {
 		var singleWrapperAttributesObject = [];
+		var productName = wrappers[i].querySelector('input[name="productName"]').value;
 		var description = wrappers[i].querySelector('textarea[name="description"]').value;
 		var type = wrappers[i].querySelector('table[data-type]').getAttribute('data-type');
 		console.log("type: ",type);
@@ -222,7 +240,7 @@ function getWrappers() {
 			var stringified = JSON.stringify(singleWrapperAttributesObject);
 
 		}
-		var test = new Product2("foo", description, singleWrapperAttributesObject);
+		var test = new Product2(productName, description, [artist_name, category], singleWrapperAttributesObject);
 		console.log(test);
 		// name, description,
 		// getDataSingleWrapper();
